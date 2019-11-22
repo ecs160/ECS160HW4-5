@@ -15,10 +15,10 @@ Luc Nglankong -
 // max line 1024 characters
 // max length = 20,000 lines
 
-const char* getfield(char* line, int num)
+const char* getfield(char* row, int num)
 {
     const char* tok;
-    for (tok = strtok(line, ";");
+    for (tok = strtok(row, ";");
             tok && *tok;
             tok = strtok(NULL, ";\n"))
     {
@@ -33,21 +33,15 @@ int main() {
 
   // accept csv file
   // https://stackoverflow.com/questions/12911299/read-csv-file-in-c
+    printf("Start"); 
 
-  #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+    FILE* csvFileStream = fopen("./Test CSV/ECS160TestCSV - simplecsv.csv", "r");
 
-
-
-    FILE* stream = fopen("ECS160TestCSV - simplecsv.csv", "r");
-
-    char line[1024];
-    while (fgets(line, 1024, stream))
+    char row[1024];
+    while (fgets(row, 1024, csvFileStream))
     {
-        char* tmp = strdup(line);
-        printf("Field 3 would be %s\n", getfield(tmp, 3));
-        // NOTE strtok clobbers tmp
+        char* tmp = strdup(row);
+        printf("Field in column 1: %s\n", getfield(tmp, 1));
         free(tmp);
     }
   printf("Hello world!");
