@@ -18,7 +18,7 @@ Luc Nglankong -
 const char* getfield(char* row, int num)
 {
     const char* tok;
-    for (tok = strtok(row, ","))
+    for (tok = strtok(row, ",");
             tok && *tok;
             tok = strtok(NULL, ",\n"))
     {
@@ -32,14 +32,27 @@ int findNameCol(char* row) // send first row
 {
     const char* tok;
     int index = 0;
-    for (tok = strtok(row, ","))
+    for (tok = strtok(row, ",");
+    		tok && *tok; 
+		tok = strtok(NULL, ",\n")) 
     {
-        if (tok.contains("name")||tok.contains(""name"")){
-          return index;
-        }
-        index++;
+	//printf("\nindex %d", index); 
+	//index++;
+        if (strcmp(tok,"name")){ // add additional checks 
+         // return index;
+ 	}
+        
     }
-    return NULL; // did not find name column
+
+
+    for (int i = 0; i < strlen(tok); i++) {
+    	index++; 
+	printf("\nindex %d", index);
+	if (strcmp(tok[i], "name") {
+		return index;
+	}
+    }
+    return 0; // did not find name column
 }
 
 int main() {
@@ -48,11 +61,11 @@ int main() {
   // accept csv file
   // https://stackoverflow.com/questions/12911299/read-csv-file-in-c
     printf("Start\n");
-
-    FILE* csvFileStream = fopen("./Test CSV/ECS160TestCSV - simplecsv.csv", "r"))
+    const char* filePath = "./Test CSV/csv2.csv";
+    FILE* csvFileStream = fopen(filePath, "r");
 
     // check if invalid file type
-    if (!cvsFileStream) {
+    if (!csvFileStream) {
       // could not find or open file
       printf("Invalid Input Format");
       return 0;
@@ -74,11 +87,11 @@ int main() {
     printf("Find name column: \n");
     char *tmp;
     tmp = strdup(row);
-    indexName = findNameCol(tmp));
-    if (indexName == null){
+    int indexName = findNameCol(tmp);
+    if (indexName == 0){
       printf("Invalid Input Format\n"); // name column not found
     } else {
-      printf("Name column found at:", indexName);
+      printf("Name column found at: %d\n", indexName);
     }
     printf("end test");
 
