@@ -30,16 +30,11 @@ const char* getfield(char* row, int num)
 
 
 int findNameCol(char* row) {
-  printf("row given: [%s]", row);
   char* word = strtok(row, ","); 
-  int indexNameCol = 0;
-  bool result = false; 
+  int indexNameCol = 1;
+
   while(word != NULL) {
-    printf("%s,",word);
-    result = strstr(word, "name"); 
-    printf("result: %d\n", result);
     if (strstr(word, "name")) {
-      printf("\nFound name column\n");
       return indexNameCol;
     }
     word = strtok(NULL, ",");
@@ -61,7 +56,6 @@ int main() {
 
     // check if invalid file type
     if (!csvFileStream) {
-      // could not find or open file
       printf("Invalid Input Format");
       return 0;
     }
@@ -73,9 +67,8 @@ int main() {
     // items may or may not be in quotes
     // else - Invalid Input Format
 
-    // try/catch?
 
-
+    // FIND NAME COLUMN INDEX 
     char row[1024];
     int lineCount = 0;
     char *tmp;
@@ -88,10 +81,11 @@ int main() {
       printf("Name column found at: %d\n", indexName);
     }
 
+    // PRINT NAMES IN COLUMN
     while (fgets(row, 1024, csvFileStream) && lineCount <= 20000)
     {
         char* tmp = strdup(row);
-        printf("Field in column 1: %s\n", getfield(tmp, 1));
+        printf("Field in name column: %s\n", getfield(tmp, indexName));
         free(tmp);
         lineCount++;
     }
