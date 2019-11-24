@@ -28,32 +28,27 @@ const char* getfield(char* row, int num)
     return NULL;
 }
 
-int findNameCol(char* row) // send first row
-{
-    const char* tok;
-    int index = 0;
-    for (tok = strtok(row, ",");
-    		tok && *tok; 
-		tok = strtok(NULL, ",\n")) 
-    {
-	//printf("\nindex %d", index); 
-	//index++;
-        if (strcmp(tok,"name")){ // add additional checks 
-         // return index;
- 	}
-        
-    }
 
-
-    for (int i = 0; i < strlen(tok); i++) {
-    	index++; 
-	printf("\nindex %d", index);
-	if (strcmp(tok[i], "name") {
-		return index;
-	}
+int findNameCol(char* row) {
+  printf("row given: [%s]", row);
+  char* word = strtok(row, ","); 
+  int indexNameCol = 0;
+  bool result = false; 
+  while(word != NULL) {
+    printf("%s,",word);
+    result = strstr(word, "name"); 
+    printf("result: %d\n", result);
+    if (strstr(word, "name")) {
+      printf("\nFound name column\n");
+      return indexNameCol;
     }
-    return 0; // did not find name column
+    word = strtok(NULL, ",");
+    indexNameCol++; 
+  }
+
+  return -1;
 }
+
 
 int main() {
 // goal - find and print top 10 tweeters ordered in decreasing order
@@ -83,18 +78,15 @@ int main() {
 
     char row[1024];
     int lineCount = 0;
-
-    printf("Find name column: \n");
     char *tmp;
-    tmp = strdup(row);
+    tmp = fgets(row, 1024,csvFileStream);
     int indexName = findNameCol(tmp);
-    if (indexName == 0){
+   
+    if (indexName == -1){
       printf("Invalid Input Format\n"); // name column not found
     } else {
       printf("Name column found at: %d\n", indexName);
     }
-    printf("end test");
-
 
     while (fgets(row, 1024, csvFileStream) && lineCount <= 20000)
     {
@@ -103,7 +95,6 @@ int main() {
         free(tmp);
         lineCount++;
     }
-  printf("Hello world!");
   return 0;
 
     // Store tweeters/tweets from csv into object - HashMap?
