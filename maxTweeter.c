@@ -7,16 +7,20 @@ Luc Nglankong -
 */
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+#define MAX_LINE 1024
+#define MAX_LENGTH 20000
+
+struct tweeter {
+  char* name; 
+  int tweets;
+};
 
 
-// define :
-// max line 1024 characters
-// max length = 20,000 lines
-
-const char* getfield(char* row, int num)
-{
+const char* getfield(char* row, int num) {
     const char* tok;
     for (tok = strtok(row, ",");
             tok && *tok;
@@ -44,10 +48,19 @@ int findNameCol(char* row) {
   return -1;
 }
 
+// other needed helper functions
+// search dynamic struct of tweeters for existing tweeter
+// add new tweeter to dynamic struct
+// sort dynamic struct of tweeters by num tweets or find top 10 highest tweeter function 
+
 
 int main() {
 // goal - find and print top 10 tweeters ordered in decreasing order
 
+  // is there a way to do this dynamically? waste of space?
+  struct tweeter* tweeters = malloc(MAX_LENGTH*sizeof(int)*sizeof(char*));
+
+  // struct tweeter* tweeter_ptr = tweeters; 
   // accept csv file
   // https://stackoverflow.com/questions/12911299/read-csv-file-in-c
     printf("Start\n");
@@ -81,14 +94,33 @@ int main() {
       printf("Name column found at: %d\n", indexName);
     }
 
+    
+    //tweeter *newTweeter = malloc(sizeof(tweeter));
+   
+    // NOT WORKING-- 
+    int numTweetersTotal = 0;
     // PRINT NAMES IN COLUMN
-    while (fgets(row, 1024, csvFileStream) && lineCount <= 20000)
+    while (fgets(row, MAX_LINE, csvFileStream) && lineCount <= MAX_LENGTH)
     {
         char* tmp = strdup(row);
         printf("Field in name column: %s\n", getfield(tmp, indexName));
+       // need to add a search function for finding existing tweeters 
+        tweeters[numTweetersTotal].name = getfield(tmp,indexName);
+        tweeters[numTweetersTotal].tweets++; 
+
         free(tmp);
         lineCount++;
+        numTweetersTotal++; 
     }
+    printf("Tweeters Stored:");
+
+    for (int i = 0; i < numTweetersTotal; i++) {
+      printf("Tweeter: %s", tweeters[i].name);
+    }
+
+    // -- 
+    
+  printf("\nDone");
   return 0;
 
     // Store tweeters/tweets from csv into object - HashMap?
