@@ -36,17 +36,24 @@ char* getfield(char* row, int num) {
 // Need to handle multiple name columns case 
 int findNameCol(char* row) {
   char* word = strtok(row, ","); 
-  int indexNameCol = 1;
+  int indexNameCol = -1;
+  int tmpIndex = 1; 
+  int countNames= 0;
 
   while(word != NULL) {
     if (strstr(word, "name")) {
-      return indexNameCol;
+      countNames++; 
+      indexNameCol = tmpIndex;
     }
     word = strtok(NULL, ",");
-    indexNameCol++; 
+    tmpIndex++; 
   }
 
-  return -1;
+  if (countNames == 1) {
+    return indexNameCol;
+  } 
+    return -1;
+
 }
 
 // other needed helper functions
