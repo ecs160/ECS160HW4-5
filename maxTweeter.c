@@ -19,9 +19,9 @@ struct tweeter {
   int tweets;
 };
 
-
-const char* getfield(char* row, int num) {
-    const char* tok;
+// from stack overflow... need to delete 
+char* getfield(char* row, int num) {
+    char* tok;
     for (tok = strtok(row, ",");
             tok && *tok;
             tok = strtok(NULL, ",\n"))
@@ -33,6 +33,7 @@ const char* getfield(char* row, int num) {
 }
 
 
+// Need to handle multiple name columns case 
 int findNameCol(char* row) {
   char* word = strtok(row, ","); 
   int indexNameCol = 1;
@@ -99,13 +100,15 @@ int main() {
    
     // NOT WORKING-- 
     int numTweetersTotal = 0;
+    char * str;
     // PRINT NAMES IN COLUMN
     while (fgets(row, MAX_LINE, csvFileStream) && lineCount <= MAX_LENGTH)
     {
         char* tmp = strdup(row);
-        printf("Field in name column: %s\n", getfield(tmp, indexName));
+        str = getfield(tmp, indexName);
+        printf("Field in name column: %s\n", str );
        // need to add a search function for finding existing tweeters 
-        tweeters[numTweetersTotal].name = getfield(tmp,indexName);
+        tweeters[numTweetersTotal].name = str;
         tweeters[numTweetersTotal].tweets++; 
 
         free(tmp);
