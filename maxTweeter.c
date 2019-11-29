@@ -19,17 +19,34 @@ struct tweeter {
   int tweets;
 };
 
-// from stack overflow... need to delete 
-char* getfield(char* row, int num) {
-    char* tok;
-    for (tok = strtok(row, ",");
-            tok && *tok;
-            tok = strtok(NULL, ",\n"))
-    {
-        if (!--num)
-            return tok;
+// returns a cell from a row
+char* getfield(char* row, int requiredCellIndex){
+
+  //go to index of cell in row
+  int currCellIndex = 1;
+  int currCharIndex = 0;
+  for(; currCellIndex != requiredCellIndex;){
+    if(row[currCharIndex] == ','){
+      currCellIndex++;
     }
-    return NULL;
+    currCharIndex++;
+  }
+
+  //get size of cell
+  size_t cellSize = 0;
+  for(int i=currCharIndex; (i<strlen(row)) && (row[i] != ','); i++){
+    cellSize++;
+  }
+
+  char cell[cellSize];
+
+  //get substring cell from row
+  strncpy(cell, &row[currCharIndex], cellSize+1);
+  
+  //convert cell contents from char[] to char*
+  char* cellStringPointer = &cell[0];
+
+  return cellStringPointer;
 }
 
 
