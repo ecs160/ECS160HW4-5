@@ -34,19 +34,16 @@ char* getfield(char* row, int requiredCellIndex){
 
   //get size of cell
   size_t cellSize = 0;
-  for(int i=currCharIndex; (i<strlen(row)) && (row[i] != ','); i++){
+  for(int i=currCharIndex; (row[i] != '\0') && (row[i] != '\n') && (row[i] != ',') && (i<strlen(row)); i++){
     cellSize++;
   }
 
-  char cell[cellSize];
-
   //get substring cell from row
-  strncpy(cell, &row[currCharIndex], cellSize+1);
-  
-  //convert cell contents from char[] to char*
-  char* cellStringPointer = &cell[0];
+  char* substr = malloc(cellSize+1);
+  strncpy(substr, &row[currCharIndex], cellSize);
+  substr[cellSize] = '\0';
 
-  return cellStringPointer;
+  return substr;
 }
 
 
