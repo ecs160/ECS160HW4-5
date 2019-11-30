@@ -21,6 +21,7 @@ Luc Nglankong -
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
 
 #define MAX_LINE 1024
 #define MAX_LENGTH 20000
@@ -37,6 +38,7 @@ int findNameCol(char*);
 struct tweeter *getTweeter(struct tweeter*, char*, int);
 void printTweeters(struct tweeter*, int);
 struct tweeter * findTopTenTweeters(struct tweeter*, int);
+int validateName(int indexName, char* row);
 
 int main() {
 
@@ -50,7 +52,7 @@ int main() {
 
     // check if invalid file type
     if (!csvFileStream) {
-      printf("Invalid Input Format");
+      printf("Invalid Input Format\n");
       return 0;
     }
 
@@ -59,7 +61,13 @@ int main() {
     int lineCount = 0;
     char *tmp;
     tmp = fgets(row, 1024,csvFileStream);
+    char* validationRow = strdup(row); //save copy of row for validation
     int indexName = findNameCol(tmp);
+    int validateNameResult = validateName(indexName-1, validationRow); //validate name header
+    if(validateNameResult < 1){
+      printf("Invalid header format\n"); // name header is invalid
+      return -1;
+    }
    
     if (indexName == -1){
       printf("Invalid Input Format\n"); // name column not found
@@ -104,6 +112,37 @@ int main() {
 
 }
 
+int validateName(int indexName, char* row){
+  int cellIndex = 0;
+  int nameCharIndex = 0;
+
+  for(int i=0; i<strlen(row) && nameCharIndex < 1; i++){
+    // increment cell index when a comma is encountered
+    if(row[i] == ','){
+      cellIndex++;
+    }
+
+    // when the current cell matches the 
+    // given "name" header cell, save the char index
+    if(cellIndex == indexName){
+      nameCharIndex = i;
+    }
+  }
+
+  //validate for whitespace
+  for(int i=nameCharIndex+1; (row[i] != '\0') && (row[i] != '\n') && 
+    (row[i] != ',') && (row[i] != '\r'); i++){
+
+      // check if there is a whitespace in name header
+      if(isspace(row[i])){
+        // return invalid
+        return 0;
+      }
+  }
+  // return valid
+  return 1;
+}
+
 
 // returns a cell from a row
 char* getfield(char* row, int requiredCellIndex){
@@ -121,7 +160,7 @@ char* getfield(char* row, int requiredCellIndex){
   //get size of cell
   size_t cellSize = 0;
   for(int i=currCharIndex; (row[i] != '\0') && (row[i] != '\n') 
-      && (row[i] != ',') && (i<strlen(row)); i++){
+      && (row[i] != ',') && (row[i] != '\r') && (i<strlen(row)); i++){
     cellSize++;
   }
 
