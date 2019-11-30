@@ -77,7 +77,6 @@ int main() {
     
     //tweeter *newTweeter = malloc(sizeof(tweeter));
    
-    // NOT WORKING-- 
     int numTweetersTotal = 0;
     char * str;
     // PRINT NAMES IN COLUMN
@@ -93,9 +92,11 @@ int main() {
         //increment tweet if tweeter exists, otherwise create new tweeter
         if(currentTweeter != NULL){
           currentTweeter->tweets++;
+          printf("\n %s's tweet count = %d ", currentTweeter->name, currentTweeter->tweets);
         }else{
           tweeters[numTweetersTotal].name = str;
-          tweeters[numTweetersTotal].tweets++; 
+          tweeters[numTweetersTotal].tweets = 1; 
+          printf("\n %s's tweet count = %d ", tweeters[numTweetersTotal].name, tweeters[numTweetersTotal].tweets);
           numTweetersTotal++; 
         }
 
@@ -103,6 +104,7 @@ int main() {
         lineCount++;
     }
     printf("Tweeters Stored:\n");
+    printf("Number of tweeters: %d", numTweetersTotal);
     printTweeters(tweeters,numTweetersTotal);
 
     // FIND TOP 10 TWEETERS 
@@ -112,11 +114,6 @@ int main() {
     // Print new structure made just for top tweeters
     printf("\nTop tweeters: ");
     printTweeters(topFound, MAX);
-
-    // for (int i = 0; i < numTweetersTotal; i++) {
-    //   printf("\nTweeter: %s Tweeets %d", tweeters[i].name, tweeters[i].tweets);
-    // }
-
     
   printf("\nDone\n");
   return 0;
@@ -241,7 +238,9 @@ struct tweeter * findTopTenTweeters( struct tweeter* tweeters, int numTweeters){
 
 void printTweeters(struct tweeter* tweeters, int numTweeters) {
   // PRINT TWEETERS STORED 
+  printf("\nprinter function:");
   for (int j = 0; j < numTweeters; j++) {
     printf("\n tweeter  %s has %d  tweets.", tweeters[j].name, tweeters[j].tweets);
   }
+  printf("\nend printer function");
 }
