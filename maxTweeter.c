@@ -13,76 +13,20 @@ Luc Nglankong -
 
 #define MAX_LINE 1024
 #define MAX_LENGTH 20000
+#define MAX 10
 
 struct tweeter {
   char* name; 
   int tweets;
 };
 
-// returns a cell from a row
-char* getfield(char* row, int requiredCellIndex){
+// function prototypes 
+char* getfield(char*, int); 
+int findNameCol(char*);
+struct tweeter *getTweeter(struct tweeter*, char*, int);
+void printTweeters(struct tweeter*, int);
+struct tweeter * findTopTenTweeters(struct tweeter*, int);
 
-  //go to index of cell in row
-  int currCellIndex = 1;
-  int currCharIndex = 0;
-  for(; currCellIndex != requiredCellIndex;){
-    if(row[currCharIndex] == ','){
-      currCellIndex++;
-    }
-    currCharIndex++;
-  }
-
-  //get size of cell
-  size_t cellSize = 0;
-  for(int i=currCharIndex; (row[i] != '\0') && (row[i] != '\n') 
-      && (row[i] != ',') && (i<strlen(row)); i++){
-    cellSize++;
-  }
-
-  //get substring cell from row
-  char* substr = malloc(cellSize+1);
-  strncpy(substr, &row[currCharIndex], cellSize);
-  substr[cellSize] = '\0';
-
-  return substr;
-}
-
-
-// Need to handle multiple name columns case 
-int findNameCol(char* row) {
-  char* word = strtok(row, ","); 
-  int indexNameCol = -1;
-  int tmpIndex = 1; 
-  int countNames= 0;
-
-  while(word != NULL) {
-    if (strstr(word, "name")) {
-      countNames++; 
-      indexNameCol = tmpIndex;
-    }
-    word = strtok(NULL, ",");
-    tmpIndex++; 
-  }
-
-  if (countNames == 1) {
-    return indexNameCol;
-  } 
-    return -1;
-
-}
-
-struct tweeter * getTweeter(struct tweeter* tweeters, char* name, int numTweeters){
-
-  printf("Entered function!\n");
-  for(int i=0; i<numTweeters; i++){
-    printf("COMPARING %s with %s\n", tweeters[i].name, name);
-    if (strcmp(tweeters[i].name, name) == 0){
-      return &tweeters[i];
-    }
-  }
-
-  return NULL;
-}
 
 // other needed helper functions
 // search dynamic struct of tweeters for existing tweeter
@@ -100,7 +44,7 @@ int main() {
   // accept csv file
   // https://stackoverflow.com/questions/12911299/read-csv-file-in-c
     printf("Start\n");
-    const char* filePath = "./Test CSV/csv2.csv";
+    const char* filePath = "./Test CSV/csv3.csv";
     FILE* csvFileStream = fopen(filePath, "r");
 
     // check if invalid file type
@@ -159,13 +103,20 @@ int main() {
         lineCount++;
     }
     printf("Tweeters Stored:\n");
+    printTweeters(tweeters,numTweetersTotal);
 
-    for (int i = 0; i < numTweetersTotal; i++) {
-      printf("Tweeter: %s\n", tweeters[i].name);
-      printf("Tweeter: %d\n", tweeters[i].tweets);
-    }
+    // FIND TOP 10 TWEETERS 
+    // finds tweeters with most tweets first
+    struct tweeter *topFound = findTopTenTweeters(tweeters, 20);
 
-    // -- 
+    // Print new structure made just for top tweeters
+    printf("\nTop tweeters: ");
+    printTweeters(topFound, MAX);
+
+    // for (int i = 0; i < numTweetersTotal; i++) {
+    //   printf("\nTweeter: %s Tweeets %d", tweeters[i].name, tweeters[i].tweets);
+    // }
+
     
   printf("\nDone\n");
   return 0;
@@ -178,4 +129,119 @@ int main() {
   // print top 10
 
 
+}
+
+
+// returns a cell from a row
+char* getfield(char* row, int requiredCellIndex){
+
+  //go to index of cell in row
+  int currCellIndex = 1;
+  int currCharIndex = 0;
+  for(; currCellIndex != requiredCellIndex;){
+    if(row[currCharIndex] == ','){
+      currCellIndex++;
+    }
+    currCharIndex++;
+  }
+
+  //get size of cell
+  size_t cellSize = 0;
+  for(int i=currCharIndex; (row[i] != '\0') && (row[i] != '\n') 
+      && (row[i] != ',') && (i<strlen(row)); i++){
+    cellSize++;
+  }
+
+  //get substring cell from row
+  char* substr = malloc(cellSize+1);
+  strncpy(substr, &row[currCharIndex], cellSize);
+  substr[cellSize] = '\0';
+
+  return substr;
+}
+
+
+int findNameCol(char* row) {
+  char* word = strtok(row, ","); 
+  int indexNameCol = -1;
+  int tmpIndex = 1; 
+  int countNames= 0;
+
+  while(word != NULL) {
+    if (strstr(word, "name")) {
+      countNames++; 
+      indexNameCol = tmpIndex;
+    }
+    word = strtok(NULL, ",");
+    tmpIndex++; 
+  }
+
+  if (countNames == 1) {
+    return indexNameCol;
+  } 
+    return -1;
+
+}
+
+
+struct tweeter * getTweeter(struct tweeter* tweeters, char* name, int numTweeters){
+
+  printf("Entered function!\n");
+  for(int i=0; i<numTweeters; i++){
+    printf("COMPARING %s with %s\n", tweeters[i].name, name);
+    if (strcmp(tweeters[i].name, name) == 0){
+      return &tweeters[i];
+    }
+  }
+
+  return NULL;
+}
+
+
+// Finds Top three tweeters by iteration 
+struct tweeter * findTopTenTweeters( struct tweeter* tweeters, int numTweeters){
+  int foundTen = 0;
+  char * maxTweeterName = ""; 
+  int maxTweeterCount = 0; 
+  int maxTweeterIndex = 0; 
+
+  struct tweeter * topTweeters = malloc(MAX*sizeof(char*)*sizeof(int));
+  
+  while (foundTen < MAX) {
+
+   // loop through tweeters
+    for (int k = 0; k < numTweeters; k++){ 
+
+      // if num tweets is greater than current max
+      // and tweeter hasn't already been added
+      if (tweeters[k].tweets >= maxTweeterCount) {
+        maxTweeterName = tweeters[k].name;
+        maxTweeterCount = tweeters[k].tweets;
+        maxTweeterIndex = k;
+      }
+
+    }
+        // max tweeter won't be added again to topTweeter structure since num tweets is never -1 during initialization
+        tweeters[maxTweeterIndex].tweets = -1;
+        
+        topTweeters[foundTen].name = maxTweeterName;
+        topTweeters[foundTen].tweets = maxTweeterCount;
+        printf("\n added top tweeter %d", maxTweeterCount);
+        foundTen++;
+        maxTweeterName = "";
+        maxTweeterCount = 0;
+
+  }
+
+  return topTweeters;
+
+
+}
+
+
+void printTweeters(struct tweeter* tweeters, int numTweeters) {
+  // PRINT TWEETERS STORED 
+  for (int j = 0; j < numTweeters; j++) {
+    printf("\n tweeter  %s has %d  tweets.", tweeters[j].name, tweeters[j].tweets);
+  }
 }
