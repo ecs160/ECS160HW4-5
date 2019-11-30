@@ -6,6 +6,17 @@ Luc Nglankong -
 
 */
 
+
+// TODO  double check following:
+
+    // check if number of rows exceed 20,000
+    // check if length of row exceeds 1024 characters
+    // check for valid "header" - could be anywhere in file
+    // check for valid "name" - could be anywhere in file
+    // items may or may not be in quotes
+    // else - Invalid Input Format
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -27,23 +38,13 @@ struct tweeter *getTweeter(struct tweeter*, char*, int);
 void printTweeters(struct tweeter*, int);
 struct tweeter * findTopTenTweeters(struct tweeter*, int);
 
-
-// other needed helper functions
-// search dynamic struct of tweeters for existing tweeter
-// add new tweeter to dynamic struct
-// sort dynamic struct of tweeters by num tweets or find top 10 highest tweeter function 
-
-
 int main() {
-// goal - find and print top 10 tweeters ordered in decreasing order
 
-  // is there a way to do this dynamically? waste of space?
   struct tweeter* tweeters = malloc(MAX_LENGTH*sizeof(int)*sizeof(char*));
 
   // struct tweeter* tweeter_ptr = tweeters; 
   // accept csv file
   // https://stackoverflow.com/questions/12911299/read-csv-file-in-c
-    printf("Start\n");
     const char* filePath = "./Test CSV/csv3.csv";
     FILE* csvFileStream = fopen(filePath, "r");
 
@@ -52,14 +53,6 @@ int main() {
       printf("Invalid Input Format");
       return 0;
     }
-
-    // check if number of rows exceed 20,000
-    // check if length of row exceeds 1024 characters
-    // check for valid "header" - could be anywhere in file
-    // check for valid "name" - could be anywhere in file
-    // items may or may not be in quotes
-    // else - Invalid Input Format
-
 
     // FIND NAME COLUMN INDEX 
     char row[1024];
@@ -70,9 +63,7 @@ int main() {
    
     if (indexName == -1){
       printf("Invalid Input Format\n"); // name column not found
-    } else {
-      printf("Name column found at: %d\n", indexName);
-    }
+    } 
 
     
     //tweeter *newTweeter = malloc(sizeof(tweeter));
@@ -84,7 +75,6 @@ int main() {
     {
         char* tmp = strdup(row);
         str = getfield(tmp, indexName);
-        printf("Field in name column: %s\n", str );
 
         //search for existing tweeter
         struct tweeter * currentTweeter = getTweeter(tweeters, str, numTweetersTotal);
@@ -92,38 +82,24 @@ int main() {
         //increment tweet if tweeter exists, otherwise create new tweeter
         if(currentTweeter != NULL){
           currentTweeter->tweets++;
-          printf("\n %s's tweet count = %d ", currentTweeter->name, currentTweeter->tweets);
         }else{
           tweeters[numTweetersTotal].name = str;
           tweeters[numTweetersTotal].tweets = 1; 
-          printf("\n %s's tweet count = %d ", tweeters[numTweetersTotal].name, tweeters[numTweetersTotal].tweets);
           numTweetersTotal++; 
         }
 
         free(tmp);
         lineCount++;
     }
-    printf("Tweeters Stored:\n");
-    printf("Number of tweeters: %d", numTweetersTotal);
-    printTweeters(tweeters,numTweetersTotal);
 
     // FIND TOP 10 TWEETERS 
     // finds tweeters with most tweets first
     struct tweeter *topFound = findTopTenTweeters(tweeters, 20);
 
     // Print new structure made just for top tweeters
-    printf("\nTop tweeters: ");
     printTweeters(topFound, MAX);
     
-  printf("\nDone\n");
   return 0;
-
-    // Store tweeters/tweets from csv into object - HashMap?
-
-
-  // loop/stream? through tweets and track number of tweets for every tweeter
-  // sort tweeters by count
-  // print top 10
 
 
 }
@@ -183,9 +159,7 @@ int findNameCol(char* row) {
 
 struct tweeter * getTweeter(struct tweeter* tweeters, char* name, int numTweeters){
 
-  printf("Entered function!\n");
   for(int i=0; i<numTweeters; i++){
-    printf("COMPARING %s with %s\n", tweeters[i].name, name);
     if (strcmp(tweeters[i].name, name) == 0){
       return &tweeters[i];
     }
@@ -223,7 +197,6 @@ struct tweeter * findTopTenTweeters( struct tweeter* tweeters, int numTweeters){
         
         topTweeters[foundTen].name = maxTweeterName;
         topTweeters[foundTen].tweets = maxTweeterCount;
-        printf("\n added top tweeter %d", maxTweeterCount);
         foundTen++;
         maxTweeterName = "";
         maxTweeterCount = 0;
@@ -237,10 +210,7 @@ struct tweeter * findTopTenTweeters( struct tweeter* tweeters, int numTweeters){
 
 
 void printTweeters(struct tweeter* tweeters, int numTweeters) {
-  // PRINT TWEETERS STORED 
-  printf("\nprinter function:");
   for (int j = 0; j < numTweeters; j++) {
-    printf("\n tweeter  %s has %d  tweets.", tweeters[j].name, tweeters[j].tweets);
+    printf("%s: %d\n", tweeters[j].name, tweeters[j].tweets);
   }
-  printf("\nend printer function");
 }
