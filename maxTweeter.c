@@ -34,7 +34,8 @@ char* getfield(char* row, int requiredCellIndex){
 
   //get size of cell
   size_t cellSize = 0;
-  for(int i=currCharIndex; (row[i] != '\0') && (row[i] != '\n') && (row[i] != ',') && (i<strlen(row)); i++){
+  for(int i=currCharIndex; (row[i] != '\0') && (row[i] != '\n') 
+      && (row[i] != ',') && (i<strlen(row)); i++){
     cellSize++;
   }
 
@@ -68,6 +69,19 @@ int findNameCol(char* row) {
   } 
     return -1;
 
+}
+
+struct tweeter * getTweeter(struct tweeter* tweeters, char* name, int numTweeters){
+
+  printf("Entered function!\n");
+  for(int i=0; i<numTweeters; i++){
+    printf("COMPARING %s with %s\n", tweeters[i].name, name);
+    if (strcmp(tweeters[i].name, name) == 0){
+      return &tweeters[i];
+    }
+  }
+
+  return NULL;
 }
 
 // other needed helper functions
@@ -128,23 +142,32 @@ int main() {
         char* tmp = strdup(row);
         str = getfield(tmp, indexName);
         printf("Field in name column: %s\n", str );
-       // need to add a search function for finding existing tweeters 
-        tweeters[numTweetersTotal].name = str;
-        tweeters[numTweetersTotal].tweets++; 
+
+        //search for existing tweeter
+        struct tweeter * currentTweeter = getTweeter(tweeters, str, numTweetersTotal);
+
+        //increment tweet if tweeter exists, otherwise create new tweeter
+        if(currentTweeter != NULL){
+          currentTweeter->tweets++;
+        }else{
+          tweeters[numTweetersTotal].name = str;
+          tweeters[numTweetersTotal].tweets++; 
+          numTweetersTotal++; 
+        }
 
         free(tmp);
         lineCount++;
-        numTweetersTotal++; 
     }
-    printf("Tweeters Stored:");
+    printf("Tweeters Stored:\n");
 
     for (int i = 0; i < numTweetersTotal; i++) {
-      printf("Tweeter: %s", tweeters[i].name);
+      printf("Tweeter: %s\n", tweeters[i].name);
+      printf("Tweeter: %d\n", tweeters[i].tweets);
     }
 
     // -- 
     
-  printf("\nDone");
+  printf("\nDone\n");
   return 0;
 
     // Store tweeters/tweets from csv into object - HashMap?
