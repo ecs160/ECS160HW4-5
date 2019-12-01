@@ -96,8 +96,6 @@ int main() {
       printf("Invalid Input Format\n"); // name column not found
       return -1;
     } 
-    
-    //tweeter *newTweeter = malloc(sizeof(tweeter));
    
     int numTweetersTotal = 0;
     char * str;
@@ -245,12 +243,9 @@ bool quoteScanner(char*phrase) {
 
   for (int i = 0; i < strlen(phrase); i++ ){
     if (phrase[i] == '"') {
-        //  printf("\nfound start quote\n");
         startQuote = true;
     }
-    i++;
-    if ((startQuote) && (phrase[i] =='"')){
-        // printf("\nfound end quote\n");
+    if ((startQuote) && (phrase[i+1] =='"')){
       endQuote = true;
     }
   }
@@ -406,6 +401,8 @@ struct tweeter * findTopTenTweeters( struct tweeter* tweeters, int numTweeters){
 
 void printTweeters(struct tweeter* tweeters, int numTweeters) {
   for (int j = 0; j < numTweeters; j++) {
-    printf("%s: %d\n", tweeters[j].name, tweeters[j].tweets);
+    if (tweeters[j].name != NULL) {
+      printf("%s: %d\n", tweeters[j].name, tweeters[j].tweets);
+    }
   }
 }
