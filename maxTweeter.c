@@ -240,20 +240,33 @@ int getNumColumns(char* header){
 bool quoteScanner(char*phrase) {
   bool startQuote = false;
   bool endQuote = false;
+  bool foundQuote = false;
 
   for (int i = 0; i < strlen(phrase); i++ ){
-    if (phrase[i] == '"') {
-        startQuote = true;
+
+     if (phrase[i] == '"') {
+      foundQuote = true;
     }
-    if ((startQuote) && (phrase[i+1] =='"')){
+    if ((phrase[i] == '"')&&(i==0) ){
+      startQuote = true; 
+    }
+     if ((startQuote) && (phrase[i+1] =='"') &&(i==strlen(phrase)-2) ){
       endQuote = true;
     }
   }
-  if((startQuote && endQuote) || (!startQuote && !endQuote)){
-     return true;
+
+  // quote found in cell but not at ends or have matching
+  if ((!startQuote)&&(!endQuote)&&(foundQuote)){
+    return false;
+  }
+
+  // quotes found at ends or not at all
+  if (((startQuote) && (endQuote)) || (!startQuote && !endQuote)){
+    return true;
   }
 
   return false;
+
 }
 
 // validate header
