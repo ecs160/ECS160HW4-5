@@ -10,7 +10,7 @@ Luc Nglankong -
 // TODO  double check following:
 
     // check if number of rows exceed 20,000
-    // check if length of row exceeds 1024 characters
+    // Done - check if length of row exceeds 1024 characters
     // check for valid "header" - could be anywhere in file
     // check for valid "name" - could be anywhere in file
     // Done - items may or may not be in quotes
@@ -100,9 +100,23 @@ int main() {
     int numTweetersTotal = 0;
     char * str;
     // PRINT NAMES IN COLUMN
-    while (fgets(row, MAX_LINE, csvFileStream) && lineCount <= MAX_LENGTH)
+    while (fgets(row, MAX_LINE, csvFileStream))
     {
         char* tmp = strdup(row);
+
+        // validate # of lines
+        if(lineCount > 20000){
+          printf("Invalid line length\n");
+          return -1;
+        }
+
+
+        // validate row length
+        if(strchr(tmp, '\n') == NULL){
+          printf("Invalid row length\n");
+          return -1;
+        }
+
         str = getfield(tmp, indexName);
 
         //validate that current row has the correct # of columns
@@ -131,6 +145,8 @@ int main() {
 
         free(tmp);
         lineCount++;
+
+        
     }
 
     // FIND TOP 10 TWEETERS 
