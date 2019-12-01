@@ -53,11 +53,11 @@ int main() {
   // struct tweeter* tweeter_ptr = tweeters; 
   // accept csv file
   // https://stackoverflow.com/questions/12911299/read-csv-file-in-c
-    const char* filePath = "./Test CSV/csv2.csv";
+    const char* filePath = "./Test CSV/empty-csv.csv";
     FILE* csvFileStream = fopen(filePath, "r");
 
-    // check if invalid file type
-    if (!csvFileStream) {
+    // check if invalid file type or empty file
+    if (!csvFileStream || ftell(csvFileStream) == 0) {
       printf("Invalid Input Format\n");
       return -1;
     }
