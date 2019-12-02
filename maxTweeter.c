@@ -35,14 +35,14 @@ int getNumColumns(char* row);
 bool getQuoteIndex(char* header, int columnIndex);
 bool checkColumnQuotes(char* row, bool quoteIndex[], int numColumns);
 
-int main() {
+int main(int argc, char *argv[]) {
 
   struct tweeter* tweeters = malloc(MAX_LENGTH*sizeof(int)*sizeof(char*));
 
   // struct tweeter* tweeter_ptr = tweeters; 
   // accept csv file
   // https://stackoverflow.com/questions/12911299/read-csv-file-in-c
-    const char* filePath = "./Test CSV/csvquotes.csv";
+    const char* filePath = argv[1];
     FILE* csvFile = fopen(filePath, "r");
 
     // check if invalid file type or empty file - https://stackoverflow.com/questions/13566082/how-can-check-if-file-has-content-or-not-using-c/13566193
