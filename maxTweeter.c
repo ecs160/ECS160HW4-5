@@ -385,23 +385,28 @@ int findNameCol(char* row) {
   if (word == NULL){
     return -1;
   }
-  while((word != NULL)||(!strstr(word, ""))) {
+  while((word != NULL)) {
   
-    if (strstr(word, "name")) {
+    if (strstr(word, "name")||(!strstr(word, ""))) {
       nameWord = word;
       countNames++; 
       indexNameCol = tmpIndex;
     }
-    if (strstr(word, "\n")){
-      return -1;
-    }
+    // if (strstr(word, "\n")){
+    //   return -1;
+    // }
     word = strtok(NULL, ",");
     tmpIndex++; 
   }
   //validate that "name" doesnt contain other characters
-  char* validName1 = "\"name\"";
-  char* validName2 = "name";
- 
+
+  char validName1[7] = "\"name\"";
+  char validName2[5] = "name";
+  
+  if (nameWord == NULL){
+    return -1;
+  }
+
   if(strcmp(nameWord, validName1) != 0 && strcmp(nameWord, validName2) != 0 ){
     return -1;
   }
