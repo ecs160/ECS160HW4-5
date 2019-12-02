@@ -402,12 +402,15 @@ int findNameCol(char* row) {
 
   char validName1[7] = "\"name\"";
   char validName2[5] = "name";
+  char validName3[6] = "name\n\0";
+  char validName4[8] = "\"name\"\n\0";
   
   if (nameWord == NULL){
     return -1;
   }
 
-  if(strcmp(nameWord, validName1) != 0 && strcmp(nameWord, validName2) != 0 ){
+   if(strcmp(nameWord, validName1) != 0 && strcmp(nameWord, validName2) != 0 
+  && strcmp(nameWord, validName3) != 0 && strcmp(nameWord, validName4) != 0){
     return -1;
   }
 
@@ -485,6 +488,10 @@ void printTweeters(struct tweeter* tweeters, int numTweeters) {
     tweeterName = tweeters[j].name;
     x = 0;
     i = 0;
+    if(tweeterName == NULL){
+      printf("Invalid input field\n");
+      exit(0);
+    }
     u = strlen(tweeterName);
     trailingQuotes = 0;
     containsQuotes = false;
