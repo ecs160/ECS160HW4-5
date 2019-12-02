@@ -401,11 +401,7 @@ int findNameCol(char* row) {
   //validate that "name" doesnt contain other characters
   char* validName1 = "\"name\"";
   char* validName2 = "name";
-  
-  if (nameWord == NULL){
-    return -1;
-  }
-
+ 
   if(strcmp(nameWord, validName1) != 0 && strcmp(nameWord, validName2) != 0 ){
     return -1;
   }
