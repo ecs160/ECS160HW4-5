@@ -98,6 +98,7 @@ int main(int argc, char *argv[]) {
     free(numColumnsRow);
     free(quoteIndexRow);
     if(validateNameResult < 1){
+      printf("Invalid Input Format\n");
       exit(0);
     }
    
@@ -129,6 +130,10 @@ int main(int argc, char *argv[]) {
         }
 
         str = getfield(tmp, indexName);
+        if(str == NULL){
+          printf("Invalid Input Format\n");
+          exit(0);
+        }
 
         //validate that current row has the correct # of columns
         if(getNumColumns(tmp) != numColumns){
@@ -252,11 +257,11 @@ bool getQuoteIndex(char* header, int columnIndex){
   return false;
 }
 
-// given the csv header, find the number of columns
-int getNumColumns(char* header){
+// given a row, find the number of columns
+int getNumColumns(char* row){
   int numColumns=0;
-  for(int i=0; i<strlen(header); i++){
-    if(header[i] == ','){
+  for(int i=0; i<strlen(row); i++){
+    if(row[i] == ','){
       numColumns++;
     }
   }
@@ -346,6 +351,11 @@ char* getfield(char* row, int requiredCellIndex){
     if(row[currCharIndex] == ','){
       currCellIndex++;
     }
+
+    //if the end of the row is reached, this row is invalid
+    if(row[currCharIndex] == '\n'){
+      return NULL;
+    }
     currCharIndex++;
   }
 
@@ -367,17 +377,29 @@ char* getfield(char* row, int requiredCellIndex){
 
 int findNameCol(char* row) {
   char* word = strtok(row, ","); 
+  char* nameWord;
   int indexNameCol = -1;
   int tmpIndex = 1; 
   int countNames= 0;
+  
+
 
   while(word != NULL) {
     if (strstr(word, "name")) {
+      nameWord = word;
       countNames++; 
       indexNameCol = tmpIndex;
     }
     word = strtok(NULL, ",");
     tmpIndex++; 
+  }
+
+  //validate that "name" doesnt contain other characters
+  char* validName1 = "\"name\"";
+  char* validName2 = "name";
+  
+  if(strcmp(nameWord, validName1) != 0 && strcmp(nameWord, validName2) != 0){
+    return -1;
   }
 
   if (countNames == 1) {
