@@ -53,7 +53,7 @@ int main() {
   // struct tweeter* tweeter_ptr = tweeters; 
   // accept csv file
   // https://stackoverflow.com/questions/12911299/read-csv-file-in-c
-    const char* filePath = "./Test CSV/csv2.csv";
+    const char* filePath = "./Test CSV/csvquotes.csv";
     FILE* csvFile = fopen(filePath, "r");
 
     // check if invalid file type or empty file - https://stackoverflow.com/questions/13566082/how-can-check-if-file-has-content-or-not-using-c/13566193
@@ -448,9 +448,58 @@ struct tweeter * findTopTenTweeters( struct tweeter* tweeters, int numTweeters){
 
 
 void printTweeters(struct tweeter* tweeters, int numTweeters) {
+  bool containsQuotes;
+  char * tweeterName;
+  char c;
+  unsigned long x;
+  unsigned long i;
+  unsigned long u;
+  int trailingQuotes;
+  bool foundStart;
+
   for (int j = 0; j < numTweeters; j++) {
+    tweeterName = tweeters[j].name;
+    x = 0;
+    i = 0;
+    u = strlen(tweeterName);
+    trailingQuotes = 0;
+    containsQuotes = false;
+    foundStart = false;
+
     if (tweeters[j].name != NULL) {
-      printf("%s: %d\n", tweeters[j].name, tweeters[j].tweets);
+      containsQuotes = quoteScanner(tweeterName);
+     
+      if (containsQuotes){
+
+      // find number of trailing quotes 
+       while(u != 0){
+         c = tweeterName[u--]; 
+         if (isalnum(c)){
+           break;
+         }
+         if (!isalnum(c)&& (c!='\0')){
+           trailingQuotes++;
+         }
+         
+       }
+        // remove leading quotes and keep inner quotes
+        for (int k = 0; k < (strlen(tweeterName)-trailingQuotes); k++){
+          c = tweeterName[i];
+          i++;
+        
+          if (foundStart == true){
+            tweeterName[x++] = c;
+          }
+          if ((isalnum(c))&&(!foundStart)){
+            foundStart = true;
+            tweeterName[x++] = c;
+          }
+
+        }   
+      tweeterName[x] = '\0';
+    }
+      
+    }
+      printf("%s: %d\n", tweeterName, tweeters[j].tweets);
     }
   }
-}
