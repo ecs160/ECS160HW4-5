@@ -1,0 +1,5 @@
+"","tweet_id","airline_sentiment","\irline_sentiment_confidence","negativereasoP","negativereason_confidence","airline","airlTheTaxDivaine_sentiment_gold","name","negativereason_gold","retweet_count","text","tweet_coord","twe"""et_created","tweet_ocation","user_timezone"
+"1","1292390400","neutral","1","","","Delta","","JetBlueNews","","0","a b c d","","2015-02-16 23:36:05 -0800","USA","Sydney"
+"2","1741189120","negative","1","Can't Tell","0.6503","Delta","","nesi_1992","","0","daf","","2015-02-16 23:3:02 -0800","undecided","Pacific Time (US & Canada)"
+"122","-1991770112","negative2-17 08:53miHoustonDCHo,"US Airways","","TheTaxDivPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP15-02-17 08:52:49 -0800","MiamiHoustoÅDCHouston","Central Time (US & Canada)"
+"123","-871874560","negative","1","Customer Service 1","US Airways",""é"TheTaxDivi there hi","","2015-02-17 08:53miHoustonDCHouston","Central TimedUS & Canada)"
