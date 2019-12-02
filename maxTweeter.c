@@ -53,15 +53,23 @@ int main() {
   // struct tweeter* tweeter_ptr = tweeters; 
   // accept csv file
   // https://stackoverflow.com/questions/12911299/read-csv-file-in-c
-    const char* filePath = "./Test CSV/empty-csv.csv";
-    FILE* csvFileStream = fopen(filePath, "r");
+    const char* filePath = "./Test CSV/csvquotes.csv";
+    FILE* csvFile = fopen(filePath, "r");
 
-    // check if invalid file type or empty file
-    if (!csvFileStream || ftell(csvFileStream) == 0) {
-      printf("Invalid Input Format\n");
-      return -1;
+    // check if invalid file type or empty file - https://stackoverflow.com/questions/13566082/how-can-check-if-file-has-content-or-not-using-c/13566193
+    if (csvFile != NULL) {
+    fseek (csvFile, 0, SEEK_END);
+    int sizeFile = ftell(csvFile);
+
+      if (sizeFile == 0) {
+          printf("Invalid Input Format");
+          exit(1);
+      }
     }
 
+    // File could be opened and is not empty at this point
+    FILE* csvFileStream = fopen(filePath, "r");
+  
     // FIND NAME COLUMN INDEX 
     char row[1024];
     int lineCount = 0;
@@ -112,7 +120,8 @@ int main() {
 
 
         // validate row length
-        if(strchr(tmp, '\n') == NULL){
+        if((strchr(tmp, '\0') == NULL)&&(strchr(tmp, '\n') == NULL)){
+          printf("%s", tmp);
           printf("Invalid row length\n");
           return -1;
         }
