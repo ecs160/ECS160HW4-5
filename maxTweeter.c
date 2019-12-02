@@ -9,7 +9,7 @@ Luc Nglankong -
 
 // TODO  double check following:
 
-    // check if number of rows exceed 20,000
+    // Done - check if number of rows exceed 20,000
     // Done - check if length of row exceeds 1024 characters
     // check for valid "header" - could be anywhere in file
     // check for valid "name" - could be anywhere in file
@@ -53,7 +53,7 @@ int main() {
   // struct tweeter* tweeter_ptr = tweeters; 
   // accept csv file
   // https://stackoverflow.com/questions/12911299/read-csv-file-in-c
-    const char* filePath = "./Test CSV/csvquotes.csv";
+    const char* filePath = "./Test CSV/csv2.csv";
     FILE* csvFile = fopen(filePath, "r");
 
     // check if invalid file type or empty file - https://stackoverflow.com/questions/13566082/how-can-check-if-file-has-content-or-not-using-c/13566193
@@ -62,7 +62,7 @@ int main() {
     int sizeFile = ftell(csvFile);
 
       if (sizeFile == 0) {
-          printf("Invalid Input Format");
+          printf("Invalid Input Format\n");
           exit(1);
       }
     }
@@ -81,6 +81,11 @@ int main() {
     char* quoteIndexRow = strdup(row); //save copy of row for getting column quote index
 
     int indexName = findNameCol(tmp);
+    // validate that there is only one name column
+    if(indexName < 1){
+      printf("Invalid csv: incorrect number of name columns.\n");
+      return -1;
+    }
     int numColumns = getNumColumns(validationRow); //get the number of columns
 
     int validateNameResult = validateHeader(indexName, validationRow, true); //validate name header
