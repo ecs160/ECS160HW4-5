@@ -129,12 +129,6 @@ int main(int argc, char *argv[]) {
           }
         }
 
-        str = getfield(tmp, indexName);
-        if(str == NULL){
-          printf("Invalid Input Format\n");
-          exit(0);
-        }
-
         //validate that current row has the correct # of columns
         if(getNumColumns(tmp) != numColumns){
           printf("Invalid Input Format\n");
@@ -144,6 +138,12 @@ int main(int argc, char *argv[]) {
         //validate that the columns that should be wrapped in quotes are
         //correctly wrapped in quotes
         if(!checkColumnQuotes(tmp, quoteIndex, numColumns)){
+          printf("Invalid Input Format\n");
+          exit(0);
+        }
+
+        str = getfield(tmp, indexName);
+        if(str == NULL){
           printf("Invalid Input Format\n");
           exit(0);
         }
@@ -347,7 +347,7 @@ char* getfield(char* row, int requiredCellIndex){
   //go to index of cell in row
   int currCellIndex = 1;
   int currCharIndex = 0;
-  for(; currCellIndex != requiredCellIndex;){
+  while(currCellIndex != requiredCellIndex){
     if(row[currCharIndex] == ','){
       currCellIndex++;
     }
