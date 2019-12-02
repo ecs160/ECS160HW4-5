@@ -118,12 +118,17 @@ int main() {
           return -1;
         }
 
+        // validate row length by checking if newline exists
+        // if the line is greater than 1024 characters than the
+        // newline will be cut off
+        if((strchr(tmp, '\n') == NULL)){
 
-        // validate row length
-        if((strchr(tmp, '\0') == NULL)&&(strchr(tmp, '\n') == NULL)){
-          printf("%s", tmp);
-          printf("Invalid row length\n");
-          return -1;
+          // the last line of the csv may not have a newline,
+          // so we also need to check if there are no more lines
+          if(fgets(row, MAX_LINE, csvFileStream) != NULL){
+            printf("Invalid row length\n");
+            return -1;
+          }
         }
 
         str = getfield(tmp, indexName);
