@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 
       if (sizeFile == 0) {
           printf("Invalid Input Format\n");
-          exit(1);
+          exit(0);
       }
     }
 
@@ -74,13 +74,13 @@ int main(int argc, char *argv[]) {
     // validate that there is only one name column
     if(indexName < 1){
       printf("Invalid Input Format\n");
-      return -1;
+      exit(0);
     }
     
     // name column not found
     if (indexName == -1){
       printf("Invalid Input Format\n");
-      return -1;
+      exit(0);
     } 
     int numColumns = getNumColumns(validationRow); //get the number of columns
 
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
     free(numColumnsRow);
     free(quoteIndexRow);
     if(validateNameResult < 1){
-      return -1;
+      exit(0);
     }
    
    
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
         // validate # of lines
         if(lineCount > 20000){
           printf("Invalid Input Format\n");
-          return -1;
+          exit(0);
         }
 
         // validate row length by checking if newline exists
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
           // so we also need to check if there are no more lines
           if(fgets(row, MAX_LINE, csvFileStream) != NULL){
             printf("Invalid Input Format\n");
-            return -1;
+            exit(0);
           }
         }
 
@@ -133,14 +133,14 @@ int main(int argc, char *argv[]) {
         //validate that current row has the correct # of columns
         if(getNumColumns(tmp) != numColumns){
           printf("Invalid Input Format\n");
-          return -1;
+          exit(0);
         }
 
         //validate that the columns that should be wrapped in quotes are
         //correctly wrapped in quotes
         if(!checkColumnQuotes(tmp, quoteIndex, numColumns)){
           printf("Invalid Input Format\n");
-          return -1;
+          exit(0);
         }
 
         //search for existing tweeter
@@ -318,7 +318,7 @@ int validateHeader(int indexName, char* row, bool isName){
     // invalid if there is a space
     if(isspace(row[i]) && isName){
       // printf("Invalid header: name column must not contain whitespaces.\n");
-      return -1;
+      exit(0);
     }
     cellSize++;
   }
@@ -330,7 +330,7 @@ int validateHeader(int indexName, char* row, bool isName){
 
   if(!quoteScanner(substr)){
     // printf("Invalid header: inconsistent quotes.\n");
-    return -1;
+    exit(0);
   }
   return 1;
 }
