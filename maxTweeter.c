@@ -27,7 +27,7 @@ Luc Nglankong -
 
 #define MAX_LINE 1024
 #define MAX_LENGTH 20000
-#define MAX 10
+#define MAX 10 // for top 10 tweeters
 
 struct tweeter {
   char* name; 
@@ -170,10 +170,10 @@ int main() {
 
     // FIND TOP 10 TWEETERS 
     // finds tweeters with most tweets first
-    struct tweeter *topFound = findTopTenTweeters(tweeters, 20);
+    struct tweeter *topFound = findTopTenTweeters(tweeters, numTweetersTotal);
 
     // Print new structure made just for top tweeters
-    printTweeters(topFound, MAX);
+    printTweeters(topFound, numTweetersTotal);
     
   return 0;
 
@@ -397,17 +397,17 @@ int findNameCol(char* row) {
 
 struct tweeter * getTweeter(struct tweeter* tweeters, char* name, int numTweeters){
 
-  for(int i=0; i<numTweeters; i++){
+   for(int i=0; i<numTweeters; i++){
     if (strcmp(tweeters[i].name, name) == 0){
       return &tweeters[i];
     }
-  }
+    }
 
   return NULL;
 }
 
 
-// Finds Top three tweeters by iteration 
+// Finds Top ten tweeters by iteration 
 struct tweeter * findTopTenTweeters( struct tweeter* tweeters, int numTweeters){
   int foundTen = 0;
   char * maxTweeterName = ""; 
